@@ -28,9 +28,9 @@ func resolveLogLevel(levelName string) zapcore.Level {
 }
 
 func CreateLogger(logDir string, loggerName string, levelName string) (*zap.Logger, error) {
-	logFile := logDir + "/%Y-%m-%d/" + loggerName + ".json"
+	logFilePath := logDir + "/%Y-%m-%d/" + loggerName + ".json"
 	rotator, err := rotatelogs.New(
-		logFile,
+		logFilePath,
 		rotatelogs.WithMaxAge(60*24*time.Hour),
 		rotatelogs.WithRotationTime(24*time.Hour))
 	if err != nil {
@@ -39,10 +39,15 @@ func CreateLogger(logDir string, loggerName string, levelName string) (*zap.Logg
 
 	// add the encoder config and rotator to create a new zap logger
 	w := zapcore.AddSync(rotator)
-	core := zapcore.NewCore(
-		zapcore.NewJSONEncoder(zap.NewDevelopmentEncoderConfig()),
-		w,
-		resolveLogLevel(levelName))
-	logger := zap.New(core)
+
+	config := zap.NewProductionEncoderConfig()
+	config.EncodeTime = zapcore.ISO8601TimeEncoder
+	fileEncoder := zapcore.NewJSONEncoder(config)
+	writer := w
+	defaultLogLevel := resolveLogLevel(levelName)
+	core := zapcore.NewTee(
+		zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
+	)
+	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 	return logger, nil
 }
