@@ -13,7 +13,7 @@ type GormLogger struct {
 	logger *zapgorm2.Logger
 }
 
-func NewGormLogger(logger *zap.Logger, levelName string) logger.Interface {
+func newGormLogger(logger *zap.Logger, levelName string) logger.Interface {
 	zap2Logger := zapgorm2.New(logger)
 	zap2Logger.LogLevel = resolveGromLogLevel(levelName)
 	zap2Logger.SetAsDefault()
