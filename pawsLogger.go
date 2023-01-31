@@ -58,6 +58,6 @@ func CreateGormLogger(logDir string, loggerName string, levelName string) (gorml
 	if err != nil {
 		return nil, err
 	}
-	gormLogger := NewGormLogger(logger, levelName)
+	gormLogger := newGormLogger(logger, levelName)
 	return gormLogger, nil
 }
