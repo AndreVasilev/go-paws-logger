@@ -6,6 +6,7 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	gormlogger "gorm.io/gorm/logger"
 )
 
 func resolveLogLevel(levelName string) zapcore.Level {
@@ -50,4 +51,13 @@ func CreateLogger(logDir string, loggerName string, levelName string) (*zap.Logg
 	)
 	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 	return logger, nil
+}
+
+func CreateGormLogger(logDir string, loggerName string, levelName string) (gormlogger.Interface, error) {
+	logger, err := CreateLogger(logDir, loggerName, levelName)
+	if err != nil {
+		return nil, err
+	}
+	gormLogger := NewGormLogger(logger, levelName)
+	return gormLogger, nil
 }
