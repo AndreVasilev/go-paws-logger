@@ -36,17 +36,17 @@ func (gl *GormLogger) LogMode(level logger.LogLevel) logger.Interface {
 }
 
 func (gl *GormLogger) Info(ctx context.Context, s string, i ...interface{}) {
-	gl.Info(ctx, s, i)
+	gl.logger.Info(ctx, s, i)
 }
 
 func (gl *GormLogger) Warn(ctx context.Context, s string, i ...interface{}) {
-	gl.Warn(ctx, s, i)
+	gl.logger.Warn(ctx, s, i)
 }
 
 func (gl *GormLogger) Error(ctx context.Context, s string, i ...interface{}) {
-	gl.Error(ctx, s, i)
+	gl.logger.Error(ctx, s, i)
 }
 
 func (gl *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
-	gl.Trace(ctx, begin, fc, err)
+	gl.logger.Trace(ctx, begin, fc, err)
 }
