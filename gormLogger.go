@@ -15,12 +15,12 @@ type GormLogger struct {
 
 func newGormLogger(logger *zap.Logger, levelName string) logger.Interface {
 	zap2Logger := zapgorm2.New(logger)
-	zap2Logger.LogLevel = resolveGromLogLevel(levelName)
+	zap2Logger.LogLevel = resolveGormLogLevel(levelName)
 	zap2Logger.SetAsDefault()
 	return &GormLogger{&zap2Logger}
 }
 
-func resolveGromLogLevel(levelName string) logger.LogLevel {
+func resolveGormLogLevel(levelName string) logger.LogLevel {
 	switch levelName {
 	case "debug":
 		return logger.Info
