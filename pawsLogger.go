@@ -28,11 +28,11 @@ func resolveLogLevel(levelName string) zapcore.Level {
 	}
 }
 
-func CreateLogger(logDir string, loggerName string, levelName string) (*zap.Logger, error) {
+func CreateLogger(logDir string, loggerName string, levelName string, maxDaysAge int) (*zap.Logger, error) {
 	logFilePath := logDir + "/%Y-%m-%d/" + loggerName + ".json"
 	rotator, err := rotatelogs.New(
 		logFilePath,
-		rotatelogs.WithMaxAge(60*24*time.Hour),
+		rotatelogs.WithMaxAge(time.Duration(maxDaysAge)*24*time.Hour),
 		rotatelogs.WithRotationTime(24*time.Hour))
 	if err != nil {
 		return nil, err
@@ -53,8 +53,8 @@ func CreateLogger(logDir string, loggerName string, levelName string) (*zap.Logg
 	return logger, nil
 }
 
-func CreateGormLogger(logDir string, loggerName string, levelName string) (gormlogger.Interface, error) {
-	logger, err := CreateLogger(logDir, loggerName, levelName)
+func CreateGormLogger(logDir string, loggerName string, levelName string, maxDaysAge int) (gormlogger.Interface, error) {
+	logger, err := CreateLogger(logDir, loggerName, levelName, maxDaysAge)
 	if err != nil {
 		return nil, err
 	}
